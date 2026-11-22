@@ -12,6 +12,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Works whether the app files are at the top of the repo or inside a sub-folder
+      - name: Find the app folder
+        run: |
+          F=$(find . -name package.json -not -path '*/node_modules/*' | head -1)
+          if [ -z "$F" ]; then echo "package.json not found - upload ALL the app files to the repo"; exit 1; fi
+          D=$(dirname "$F")
+          echo "App folder: $D"
+          echo "APP_DIR=$D" >> "$GITHUB_ENV"
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -22,22 +31,27 @@ jobs:
           java-version: 17
 
       - name: Install packages
+        working-directory: ${{ env.APP_DIR }}
         run: npm install
 
       - name: Copy scanner engine files into the app
+        working-directory: ${{ env.APP_DIR }}
         run: npm run prepare-www
 
       - name: Create the Android project
+        working-directory: ${{ env.APP_DIR }}
         run: npx cap add android
 
       - name: Camera permission + portrait lock
+        working-directory: ${{ env.APP_DIR }}
         run: node scripts/patch-android.js
 
       - name: Copy the app into the Android project
+        working-directory: ${{ env.APP_DIR }}
         run: npx cap sync android
 
       - name: Build the APK
-        working-directory: android
+        working-directory: ${{ env.APP_DIR }}/android
         run: |
           chmod +x gradlew
           ./gradlew assembleDebug --no-daemon
@@ -46,5 +60,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Scan-and-Score-APK
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: ${{ env.APP_DIR }}/android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
