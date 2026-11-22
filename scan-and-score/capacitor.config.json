@@ -1,0 +1,7 @@
+{
+  "appId": "com.rcis.scanscore",
+  "appName": "Scan & Score",
+  "webDir": "www",
+  "server": { "androidScheme": "https" },
+  "android": { "allowMixedContent": false }
+}

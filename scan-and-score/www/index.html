@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#0f3d3e">
+<title>Scan &amp; Score</title>
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div id="app"></div>
+<div id="busy" class="busy hidden"><div class="spinner"></div><div id="busyMsg">Working…</div></div>
+<div id="toast" class="toast hidden"></div>
+<div id="cam" class="cam hidden">
+  <video id="camVideo" playsinline muted autoplay></video>
+  <canvas id="camOverlay"></canvas>
+  <div class="cam-top"><button id="camClose" class="cam-btn">✕</button><div id="camTitle" class="cam-title"></div><button id="camTorch" class="cam-btn hidden">🔦</button></div>
+  <div class="cam-bottom">
+    <div id="camHint" class="cam-hint">Point the camera at the page</div>
+    <div class="cam-progress"><div id="camProgress"></div></div>
+    <button id="camShoot" class="shutter" aria-label="Capture"></button>
+  </div>
+</div>
+
+<!-- Capacitor runtime + plugins (plain script versions, copied here by "npm run prepare-www") -->
+<script src="vendor/capacitor.js"></script>
+<script src="vendor/share.js"></script>
+<script src="vendor/filesystem.js"></script>
+<script src="vendor/opencv.js"></script>
+<script src="js/omr-engine.js"></script>
+<script src="js/store.js"></script>
+<script src="js/camera.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
